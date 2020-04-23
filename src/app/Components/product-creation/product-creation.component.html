@@ -1,0 +1,30 @@
+  <form class="col-5" [formGroup]="createProductForm" (ngSubmit)="submit()">
+    <div class="input-box w-100 p-0 pr-3 mb-3">
+        <div class="ui-float-label mt-3">
+            <input type="text" class="input lh-27 col-12 pl-3" pInputText formControlName="name" required  (ngModelChange)="disableSubmitButton()" />
+            <label class="w-100 input-label pl-3">Name</label>
+        </div>
+    </div>
+
+    <div class="input-box w-100 p-0 pr-3 mb-3" style="margin-bottom:25px">
+        <div class="ui-float-label mt-3">
+            <input type="number" class="input lh-27 col-12 pl-3" pInputText formControlName="price" required (ngModelChange)="disableSubmitButton()" />
+            <label class="w-100 input-label pl-3">Price</label>
+        </div>
+    </div>
+
+    <p-fileUpload
+    #logoUpload
+    name="myfile[]"
+    required 
+    accept=".jpg,.png,.gif"
+    [mode]="'basic'"
+    [chooseLabel]="'UPLOAD'"
+    [multiple]="true"
+    (onSelect)="onImageSelected($event)"
+    [auto]="true"   
+    ></p-fileUpload>
+    
+    <img class="image" [src]="imageToPreview">
+    <button class="submit btn btn-primary" type="submit" [disabled]="isSumbitButtonDisabled" >Submit</button>
+</form>

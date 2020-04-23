@@ -1,0 +1,30 @@
+<div class="body"> 
+    <button class="export-btn" type="button" pButton (click)="download()" icon="fas fa-download" label="Export Products"></button>
+    <button type="button" (click)="showBasicDialog()" pButton icon="fas fa-plus-square" label="Add Product"></button>
+
+    <div class="ui-float-label search-wrapper">
+        <input
+            type="text"
+            pInputText
+            class="pl-3"
+            [(ngModel)]="searchParameter"  
+            (keyup.backspace)="serchProducts()"
+            (keyup)="serchProducts()"
+            (ngModelChange)="serchProducts()"
+        />
+        <label class="pl-3">Search Products</label>
+        <button type="button" class="ui-inputgroup-addon search-btn">
+            <i class="pi pi-search"></i>
+        </button>
+    </div>
+
+    <p-dialog header="product" [(visible)]="displayDialog" [style]="{width: '40vw'}" [baseZIndex]="10000" (onHide)="closeDialog()">    
+        <app-product-creation (add)="updateProducts($event)" ></app-product-creation>
+    </p-dialog>
+
+    <div class="row">
+        <div *ngFor="let product of products" class="col-6 col-lg-3 col-xl-3 card">
+            <app-product-card [product]="product" (onDelete)="updateProducts($event)" (onEdit)="onEditProduct($event)"></app-product-card>
+        </div>
+    </div>
+</div>

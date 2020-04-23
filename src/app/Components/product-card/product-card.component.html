@@ -1,0 +1,20 @@
+<div class="card">
+    <img class="image" [src]="productImage" alt="https://www.amerikickkansas.com/wp-content/uploads/2017/04/default-image.jpg" style="width:100%">
+    <div class="container">
+      <h4><b>{{productData.name}}</b></h4>
+      <p>Price: {{productData.price}} EGP</p>
+    <div class="icons"> 
+        <i class="edit-icon fas fa-edit" (click)="showEditDialog()"></i> 
+        <i class="delete-icon fas fa-trash-alt" (click)="showDeleteDialog()"></i> 
+    </div>  
+    </div>
+</div>
+
+<p-dialog [(visible)]="isDeleteDialogDisplayed" [style]="{width: '50vw'}" [baseZIndex]="10000">      
+    Are You Sure You Want To delete <b>{{productData.name}}</b>?
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="confirmDeleteProduct(true,productData)" label="Yes"></button>
+        <button type="button" pButton icon="pi pi-times" (click)="confirmDeleteProduct(false)" label="No" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>
+

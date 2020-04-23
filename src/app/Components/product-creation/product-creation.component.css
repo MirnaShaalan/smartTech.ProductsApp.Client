@@ -1,0 +1,14 @@
+.input-box{
+    margin-top: 25px;
+}
+.image{
+    margin-top: 10px;
+    display: block;
+    max-width: 110px;
+    max-height: 110px;
+}
+
+.submit{
+    float:right;
+}
+

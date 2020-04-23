@@ -1,0 +1,39 @@
+.body{
+    margin-top: 20px;
+}
+.export-btn{
+    margin-left: 20px;
+    margin-right: 10px;
+}
+.search-wrapper{
+    display: block;
+    margin-right: 25px;
+    float: right;
+}
+
+.search-btn{
+    padding: 4px;
+}
+.card{
+    margin-bottom: 25px;
+}
+
+.row{
+    padding: 22px;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
