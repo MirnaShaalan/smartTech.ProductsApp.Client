@@ -14,10 +14,10 @@ export class ProductCardComponent  {
     private productsService: ProductsService,
     private _sanitizer: DomSanitizer){ }
 
-  productData: Product;
-  productImage:any;
-  isDeleteDialogDisplayed:boolean=false;
-  isEditDialogDisplayed:boolean=false;
+  public productData: Product;
+  public productImage:any;
+  public isDeleteDialogDisplayed:boolean=false;
+  public isEditDialogDisplayed:boolean=false;
 
   @Input() 
   set product(value:Product){

@@ -15,12 +15,12 @@ export class ProductsViewComponent implements OnInit {
   constructor(private productsService: ProductsService,
     private _sanitizer: DomSanitizer) { }
 
-  productsToSearch: Product[];
-  displayDialog: boolean = false;
-  products:any;
-  imagePath:any;
-  searchParameter:string;
-  dialogTitle:string="Add Product";
+  public displayDialog: boolean = false;
+  public products:any;
+  public imagePath:any;
+  public searchParameter:string;
+  public dialogTitle:string="Add Product";
+  private productsToSearch: Product[];
 
   @ViewChild(ProductCreationComponent)
   productCreationComponent: ProductCreationComponent;
@@ -34,7 +34,7 @@ export class ProductsViewComponent implements OnInit {
     this.getProducts();
   }
 
-  showBasicDialog() 
+  showProductDialog() 
   {
     this.displayDialog = true;
   }
@@ -64,7 +64,7 @@ export class ProductsViewComponent implements OnInit {
   onEditProduct(product){
     this.dialogTitle="Edit Product"
     this.productCreationComponent.editMode(product);
-    this.showBasicDialog();
+    this.showProductDialog();
   }
 
   serchProducts()
@@ -86,46 +86,43 @@ export class ProductsViewComponent implements OnInit {
     this.dialogTitle="Add Product";
   }
 
-  ConvertToCSV(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-      var str = '';
+  ConvertToCSV(objectsToConvert) {
+    var array = typeof objectsToConvert !=
+     'object' ? JSON.parse(objectsToConvert) : objectsToConvert;
+    var data = '';
     var row = "";
 
-    for (var index in objArray[0]) {
-        //Now convert each value to string and comma-separated
-        row += index + ',';
+    for (var index in objectsToConvert[0]) {
+      row += index + ',';
     }
     row = row.slice(0, -1);
-    //append Label row with line break
-    str += row + '\r\n';
-
+    data += row + '\r\n';
     for (var i = 0; i < array.length; i++) {
-        var line = '';
-        for (var index in array[i]) {
-            if (line != '') line += ','
-
-            line += array[i][index];
-        }
-        str += line + '\r\n';
+      var line = '';
+      for (var index in array[i]) {
+        if (line != '') line += ','
+          line += array[i][index];
+      }
+      data += line + '\r\n';
     }
-    return str;
+    return data;
   }
 
-  download(){ 
+  downloadExportedProducts(){ 
     let ProductaToExport=
-    this.products.map(p=>{return {id:p.id,name:p.name,price:p.price}});
-  console.log(ProductaToExport);
-  console.log(this.products);
+    this.products.map(p=>
+      {return {id:p.id,name:p.name,price:p.price}});
+
     var csvData = this.ConvertToCSV(ProductaToExport);
-                          var a = document.createElement("a");
-                          a.setAttribute('style', 'display:none;');
-                          document.body.appendChild(a);
-                          var blob = new Blob([csvData], { type: 'text/csv' });
-                          var url= window.URL.createObjectURL(blob);
-                          a.href = url;
-                          a.download = 'Products.csv';/* your file name*/
-                          a.click();
-                          return 'success';
+    var a = document.createElement("a");
+    a.setAttribute('style', 'display:none;');
+    document.body.appendChild(a);
+    var blob = new Blob([csvData], { type: 'text/csv' });
+    var url= window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = 'Products.csv';/* file name*/
+    a.click();
+    return 'success';
   }
 
 }

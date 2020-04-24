@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild, ElementRef } from '@angular/core';
 import {FormBuilder,FormGroup,FormControl,Validators } from '@angular/forms';
 import { ProductsService } from 'src/app/Services/products.service';
 import { getLocaleDateTimeFormat } from '@angular/common';
@@ -17,19 +17,20 @@ export class ProductCreationComponent implements OnInit {
     private productsService: ProductsService
     ,private _sanitizer: DomSanitizer) { }
 
-  id: number;
-  isSumbitButtonDisabled: boolean;
-  imageToPreview:any;
-  name :string;
-  price:number;
-  image:string;
-  createProductForm: FormGroup;
-  _productToEdit: Product;
-  isEditable:boolean=false;
+  public isSumbitButtonDisabled: boolean;
+  public imageToPreview:any;
+  public createProductForm: FormGroup;
+  private productId: number;
+  private productName :string;
+  private productPrice:number;
+  private productImage:string;
+  private isEditable:boolean=false;
 
   @Output() add = new EventEmitter<any>();
 
-  ngOnInit(): void 
+  @ViewChild('ImageUpload') myInputVariable: any;
+
+  ngOnInit()
   {
     this.initialize();
   }
@@ -43,9 +44,9 @@ export class ProductCreationComponent implements OnInit {
   private composeFormValues() 
   {
     this.createProductForm = this.formBuilder.group({     
-        photo: new FormControl(this.image, Validators.required),
+        photo: new FormControl(this.productImage, Validators.required),
         price: new FormControl('', Validators.required),
-         name: new FormControl('', Validators.required)
+        name: new FormControl('', Validators.required)
     }); 
   }
 
@@ -58,26 +59,27 @@ export class ProductCreationComponent implements OnInit {
     else{
       this.addProduct()
     }
+
   }
 
   addProduct(){
     let newProduct: Product;
-    this.createProductForm.controls.photo.setValue(this.image);
+    this.createProductForm.controls.photo.setValue(this.productImage);
     newProduct = this.createProductForm.value;
     newProduct.lastUpdated= new Date().toISOString();
 
     this.productsService.addProduct(newProduct)
     .subscribe(response => {
-      this.createProductForm.value['id'] = response.id;
+      this.createProductForm.value['productId'] = response.id;
       this.add.emit(" ");   
     });
   }
 
   editProduct(){
     let newProduct: Product
-    this.createProductForm.controls.photo.setValue(this.image);
+    this.createProductForm.controls.photo.setValue(this.productImage);
     newProduct = this.createProductForm.value;
-    newProduct.id=this.id;
+    newProduct.id=this.productId;
     newProduct.lastUpdated= new Date().toISOString();
 
     this.productsService.editProduct(newProduct)
@@ -87,6 +89,7 @@ export class ProductCreationComponent implements OnInit {
   }
 
   onImageSelected(event) {
+    console.log(event);
     let _this = this;
     let result;
     let file = event.files[0];
@@ -100,41 +103,43 @@ export class ProductCreationComponent implements OnInit {
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
+    this.myInputVariable.clear();
   }
 
 
   setImage(image: any)
   {
     this.imageToPreview=image;
-    this.image=image.toString().split(",")[1];;
+    this.productImage=image.toString().split(",")[1];;
   }
 
 
   editMode(product : Product)
   {
     this.isEditable=true;
-    this.id=product.id;
-    this.name=product.name;
+    this.productId=product.id;
+    this.productName=product.name;
     this.createProductForm.controls['name'].setValue(product.name);
     this.createProductForm.controls['price'].setValue(product.price);
     this.createProductForm.controls['photo'].setValue(product.photo);
-    this.image=product.photo;
+    this.productImage=product.photo;
     this.imageToPreview=
     this._sanitizer
-      .bypassSecurityTrustResourceUrl('data:image/jpg;base64,'+this.image);
+      .bypassSecurityTrustResourceUrl('data:image/jpg;base64,'+this.productImage);
     this.isSumbitButtonDisabled=true;
   }
 
   resetDialog()
   {
-    this.id=null;
-    this.name='';
-    this.image=null;
-    this.imageToPreview='';
-    this.createProductForm.controls['name'].setValue('');
-    this.createProductForm.controls['price'].setValue('');
-    this.createProductForm.controls['photo'].setValue('');
+    this.productId=null;
+    this.productName='';
+    this.productImage=null;
+    this.imageToPreview=null;
+    this.createProductForm.controls['name'].reset();
+    this.createProductForm.controls['price'].reset();
+    this.createProductForm.controls['photo'].reset();
     this.isEditable=false;
+    this.myInputVariable.clear();
   }
 
   disableSubmitButton()
@@ -142,7 +147,7 @@ export class ProductCreationComponent implements OnInit {
     let name= this.createProductForm.get('name').value;
     let price= this.createProductForm.get('price').value;
     
-    if(this.image==null||!price||!name){
+    if(this.productImage==null||!price||!name){
       this.isSumbitButtonDisabled=true;
     }
     else

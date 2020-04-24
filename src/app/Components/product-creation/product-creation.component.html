@@ -14,12 +14,12 @@
     </div>
 
     <p-fileUpload
-    #logoUpload
+    #ImageUpload
     name="myfile[]"
     required 
     accept=".jpg,.png,.gif"
     [mode]="'basic'"
-    [chooseLabel]="'UPLOAD'"
+    [chooseLabel]="'Upload Product Image'"
     [multiple]="true"
     (onSelect)="onImageSelected($event)"
     [auto]="true"   
